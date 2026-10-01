@@ -4,9 +4,113 @@ author: "Yijia"
 date: "2026-10-01"
 output: github_document
 ---
-
+##Set up packages
 ```{r}
 library(tidyverse)
 library(readxl)
 ```
+
+#Problem 1
+##Import and clean
+```{r}
+transit_df =
+  read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") |>
+  janitor::clean_names() |>
+  select(
+    line,
+    station_name,
+    station_latitude,
+    station_longitude,
+    route1:route11,
+    entry,
+    vending,
+    entrance_type,
+    ada
+  ) |>
+  mutate(
+    entry = case_match(
+      entry,
+      "YES" ~ TRUE,
+      "NO" ~ FALSE
+    )
+  )
+```
+###Write a short paragraph about this dataset – explain briefly what variables the dataset contains, describe your data cleaning steps so far
+The NYC Transit dataset contains information about subway station entrances and exits, including station line and name, geographic coordinates, routes served, entry status, vending availability, entrance type, and ADA accessibility. I cleaned the data by standardizing the variable names, selecting only the variables relevant to the analysis, and converting the `entry` variable from character values (`YES` and `NO`) to a logical variable (`TRUE` and `FALSE`).
+
+###Give the dimension (rows x columns) of the resulting dataset
+```{r}
+dim(transit_df)
+```
+The dataset has 1,868 observations and 19 variables.
+
+###Are these data tidy?
+At this stage, the data are not fully tidy because route information is spread across multiple columns (route1 through route11) rather than stored as values of a single route variable.
+
+##Answer the following questions using these data
+###How many distinct stations are there?
+```{r}
+transit_df |>
+  distinct(line, station_name) |>
+  nrow()
+```
+###How many stations are ADA compliant?
+```{r}
+transit_df |>
+  filter(ada == TRUE) |>
+  distinct(line, station_name) |>
+  nrow()
+```
+###What proportion of station entrances / exits without vending allow entrance?
+```{r}
+transit_df |>
+  filter(vending == "NO") |>
+  summarise(
+    proportion = mean(entry)
+  )
+```
+##Reformat data
+```{r}
+transit_tidy =
+  transit_df |>
+  mutate(
+    across(route1:route11, as.character))|>
+  pivot_longer(
+    route1:route11,
+    names_to = "route_number",
+    names_prefix = "route",
+    values_to = "route_name"
+  ) |>
+  drop_na(route_name) |>
+  mutate(
+    route_number = as.integer(route_number)
+  )
+transit_tidy
+```
+###How many distinct stations serve the A train? 
+```{r}
+transit_tidy |>
+  filter(route_name == "A") |>
+  distinct(line, station_name) |>
+  nrow()
+```
+###Of the stations that serve the A train, how many are ADA compliant?
+```{r}
+transit_tidy |>
+  filter(
+    route_name == "A",
+    ada == TRUE
+  ) |>
+  distinct(line, station_name) |>
+  nrow()
+```
+#Problem 2
+
+
+
+
+
+
+
+
 
