@@ -1,0 +1,12 @@
+---
+title: "p8105_hw2_yw4886"
+author: "Yijia"
+date: "2026-10-01"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
