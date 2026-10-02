@@ -169,7 +169,7 @@ trash_wheel_df =
   )
 trash_wheel_df
 ```
-## Answer to questions and Paragragh
+## Answers and Discussion
 ### For available data, what was the total weight of trash collected by Professor Trash Wheel?
 ```{r}
 professor_weight =
@@ -286,7 +286,7 @@ mci_amyloid =
     )
   )
 ```
-## Comment and Answers to questions
+## Comments and Answers
 ### Comment on the steps on the import process and the features of the dataset
 The amyloid dataset contains longitudinal measurements of the amyloid 42/40 ratio at baseline and approximately 2, 4, 6, and 8 years after baseline. As with the demographic dataset, I skipped the descriptive first row during import and standardized the variable names. The original data were in wide format, with each follow-up time stored in a separate column, so I used `pivot_longer()` to create a tidy dataset with one row per participant per visit. I also created a numeric `time` variable representing years since baseline. The resulting dataset contains `r n_distinct(mci_amyloid$id)` participants and `r nrow(mci_amyloid)` participant-visit observations.
 
@@ -343,7 +343,7 @@ write_csv(
 )
 ```
 
-#### Discription
+#### Description
 The demographic and biomarker datasets were combined using `inner_join()` by participant ID, so only participants who appeared in both datasets were retained. The resulting dataset contains `r n_distinct(mci_complete$id)` participants and `r nrow(mci_complete)` participant-visit observations. Each row represents one participant at one study visit and includes baseline demographic variables, such as age, sex, education, APOE4 carrier status, and MCI onset information, together with visit time and the corresponding amyloid 42/40 ratio.The combined dataset was exported as `mci_complete.csv` to the data directory.
 
 
