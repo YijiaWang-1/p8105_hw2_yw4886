@@ -105,6 +105,100 @@ transit_tidy |>
   nrow()
 ```
 #Problem 2
+###Read and clean the Mr. Trash Wheel sheet
+```{r}
+mr_trash =
+  read_excel(
+    "./data/202509 Trash Wheel Collection Data.xlsx",
+    sheet = "Mr. Trash Wheel",
+    range = "A2:N709"
+  ) |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(
+    year = as.integer(year),
+    month = str_trim(month),
+    sports_balls = as.integer(round(sports_balls)),
+    trash_wheel = "Mr. Trash Wheel"
+  )
+mr_trash
+```
+
+###Professor Trash Wheel
+```{r}
+professor_trash =
+  read_excel(
+    "./data/202509 Trash Wheel Collection Data.xlsx",
+    sheet = "Professor Trash Wheel",
+    range = "A2:M134"
+  ) |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(
+    year = as.integer(year),
+    month = str_trim(month),
+    trash_wheel = "Professor Trash Wheel"
+  )
+professor_trash
+```
+##Gwynnda
+```{r}
+gwynnda_trash =
+  read_excel(
+    "./data/202509 Trash Wheel Collection Data.xlsx",
+    sheet = "Gwynns Falls Trash Wheel",
+    range = "A2:L351"
+  ) |>
+  janitor::clean_names() |>
+  drop_na(dumpster) |>
+  mutate(
+    year = as.integer(year),
+    month = str_trim(month),
+    trash_wheel = "Gwynnda"
+  )
+gwynnda_trash
+```
+
+##Combine
+```{r}
+trash_wheel_df =
+  bind_rows(
+    mr_trash,
+    professor_trash,
+    gwynnda_trash
+  )
+trash_wheel_df
+```
+
+The combined Trash Wheel dataset contains `r nrow(trash_wheel_df)` observations from Mr. Trash Wheel, Professor Trash Wheel, and Gwynnda. Key variables include dumpster number, month and year of collection, date, weight and volume of trash collected, and counts of different types of trash such as plastic bottles, polystyrene, cigarette butts, plastic bags, and wrappers. During data cleaning, I imported each worksheet using specified Excel ranges to exclude non-data rows and columns, standardized the variable names, removed rows without dumpster-specific information, cleaned the month and year variables, and rounded the number of sports balls in the Mr. Trash Wheel dataset to the nearest integer. I also created a `trash_wheel` variable to identify which Trash Wheel each observation came from before combining the three datasets. Professor Trash Wheel collected a total of `r professor_weight` tons of trash, and Gwynnda collected `r gwynnda_cigarettes` cigarette butts in June 2022.
+
+###For available data, what was the total weight of trash collected by Professor Trash Wheel?
+```{r}
+professor_weight =
+  trash_wheel_df |>
+  filter(trash_wheel == "Professor Trash Wheel") |>
+  summarize(
+    total_weight = sum(weight_tons, na.rm = TRUE)
+  ) |>
+  pull(total_weight)
+```
+
+###What was the total number of cigarette butts collected by Gwynnda in June of 2022?
+```{r}
+gwynnda_cigarettes =
+  trash_wheel_df |>
+  filter(
+    trash_wheel == "Gwynnda",
+    year == 2022,
+    month == "June"
+  ) |>
+  summarize(
+    total_cigarettes = sum(cigarette_butts, na.rm = TRUE)
+  ) |>
+  pull(total_cigarettes)
+```
+
+
 
 
 
