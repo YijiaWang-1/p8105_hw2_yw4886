@@ -109,7 +109,7 @@ transit_tidy |>
 ```{r}
 mr_trash =
   read_excel(
-    "./data/202509 Trash Wheel Collection Data.xlsx",
+    "./data/202610 Trash Wheel Collection Data.xlsx",
     sheet = "Mr. Trash Wheel",
     range = "A2:N709"
   ) |>
@@ -128,7 +128,7 @@ mr_trash
 ```{r}
 professor_trash =
   read_excel(
-    "./data/202509 Trash Wheel Collection Data.xlsx",
+    "./data/202610 Trash Wheel Collection Data.xlsx",
     sheet = "Professor Trash Wheel",
     range = "A2:M134"
   ) |>
@@ -145,8 +145,8 @@ professor_trash
 ```{r}
 gwynnda_trash =
   read_excel(
-    "./data/202509 Trash Wheel Collection Data.xlsx",
-    sheet = "Gwynns Falls Trash Wheel",
+    "./data/202610 Trash Wheel Collection Data.xlsx",
+    sheet = "Gwynnda the Good Wheel of the W",
     range = "A2:L351"
   ) |>
   janitor::clean_names() |>
@@ -195,6 +195,7 @@ gwynnda_cigarettes =
     total_cigarettes = sum(cigarette_butts, na.rm = TRUE)
   ) |>
   pull(total_cigarettes)
+gwynnda_cigarettes
 ```
 
 ## Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in the resulting dataset, and give examples of key variables.
